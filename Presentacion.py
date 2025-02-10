@@ -1,5 +1,5 @@
 import os
-class presentacion:
+class Presentacion:
 
     def __init__(self):
         pass  # Constructor, puedes inicializar variables aquí si es necesario
