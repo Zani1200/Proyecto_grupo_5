@@ -37,7 +37,7 @@ Clases:
 
 - Presentacion -> Alfredo
 - Base de datos -> David
-- Principal -ª David  + Alfredo
+- Principal -> David  + Alfredo
 - Interacciones con otras APIs (IA, weather) -> David + Alfredo
 - Prompts y plantillas -> Alfredo
 
