@@ -35,11 +35,11 @@ DISEÑO
 
 Clases:
 
-- Presentacion
-- Base de datos
-- Principal
-- Interacciones con otras APIs (IA, weather)
-- Prompts y plantillas
+- Presentacion -> Alfredo
+- Base de datos -> David
+- Principal -ª David  + Alfredo
+- Interacciones con otras APIs (IA, weather) -> David + Alfredo
+- Prompts y plantillas -> Alfredo
 
 -------------------
 
