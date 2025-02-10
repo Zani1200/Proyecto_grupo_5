@@ -48,7 +48,6 @@ FLUJO
 1. Bienvenida a la app (¿usar chatGPT?)
 2. Interacción con el usuario para recibir su input acerca de qué necesita (¿usar chatGPT?)
    - Iterar hasta que el usuario haya terminado
-   - Iterar hasta que el usuario quiera
    - Ofrecer distintos tipos de input (video, audio, texto)
    - Para cada uno de ellos, ofrecer el nombre del atributo, por ejemplo: localización, 
          estado de ánimo, nivel de energía, etc.
