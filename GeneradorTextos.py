@@ -1,5 +1,7 @@
 from Proyecto_Grupo_5 import ModeloGenerativo
 from Proyecto_Grupo_5.ModeloGPT import ModeloGPT
+from Proyecto_Grupo_5.Presentacion import Presentacion
+
 
 class GeneradorTextos:
     def __init__(self):
@@ -19,9 +21,32 @@ class GeneradorTextos:
             textos[modelo.nombre] = texto
         return textos
 
-
-
 def main():
+
+    presentacion = Presentacion()
+    presentacion.mostrarBienvenida()
+    print("\n")
+    print("*" * 50)
+    presentacion.mostrarMenu()
+    print("\n")
+    print("*" * 50)
+    presentacion.solicitarInputAlUsuario()
+    print("\n")
+    print("*" * 50)
+    presentacion.solicitarMasDatosInicial()
+    print("\n")
+    print("*" * 50)
+    presentacion.solicitarMasDatosSucesivo()
+    print("\n")
+    print("*" * 50)
+    presentacion.mostrarPlanActividades(presentacion.planIA)
+    print("\n")
+    print("*" * 50)
+    presentacion.mostrarDespedida()
+    print("\n")
+    print("*" * 50)
+
+    """
     # Crear instancias de modelos
     modelo_gpt = ModeloGPT("GPT-4", "v1.0", "tu_api_key")
     # Puedes agregar más modelos si los tienes
@@ -51,6 +76,7 @@ def main():
         # Mostrar resultados
         for nombre, texto in resultados.items():
             print(f"\nModelo: {nombre}\nTexto Generado:\n{texto}\n")
+"""
 
 if __name__ == "__main__":
     main()
