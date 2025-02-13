@@ -1,75 +1,103 @@
 import os
+import time
+import json
+from modelos.modelo_gpt import ModeloGPT
 
 class Presentacion:
-    def __init__(self):
-        # Constructor, puedes inicializar variables aquí si es necesario
-        pass
+    def __init__(self, modelo_gpt):
+        """Inicializa la clase con un modelo GPT para generar respuestas."""
+        self.modelo_gpt = modelo_gpt
 
-    # Menu bienvenida
-    bienvenida = (
-        "=========================================="
-        "\n=== Bienvenido a Experiencias Viajeras ==="
-        "\n=========================================="
-    )
+    def mostrar_menu(self):
+        os.system("cls" if os.name == "nt" else "clear")  # Limpia la pantalla en Windows/Linux/Mac
+        print("\n" + "=" * 50)
+        print("🌍  🚀  BIENVENIDO A EXPERIENCIAS VIAJERAS  🚀  🌍")
+        print("=" * 50 + "\n")
 
-    menu = (
-        "\n------------ Menú ------------------"
-        "\n1. ¡Quiero una Experiencia Viajera!"
-        "\n2. Consultar base de datos"
-        "\n3. Salir (o escribe 'salir')"
-        "\n------------------------------------\n"
-    )
+        print("📌 Selecciona una opción:")
+        print("1️⃣  📍  Plan adaptado a ti")
+        print("2️⃣  ✈️  Solicitar una experiencia viajera")
+        print("3️⃣  📂  Ver base de datos")
+        print("4️⃣  ❌  Salir\n")
 
-    planDeActividades = (
-        "\nAquí tienes tu planificación para hoy, ¡esperamos que te guste!"
-        "\nSi no es así, dinos qué quieres cambiar, por favor."
-    )
+        opcion = input("👉 Ingresa el número de la opción que deseas: ")
+        return opcion
 
-    solicitarEntradaUsuario = (
-        "\n¡Hola! Cuéntame, ¿qué te apetece hacer hoy? ¿Algo tranquilito para relajarte o más movidito para cargar pilas?"
-        "\nSea lo que sea, ¡estoy aquí para ayudarte a encontrar el plan perfecto! ¿Cómo te sientes?"
-    )
+    def plan_adaptado(self):
+        """Genera un plan personalizado basado en la actividad y el nivel de energía del usuario."""
+        print("\n🔹 Has seleccionado 'Plan adaptado a tu localización' 📍🌎")
 
-    solicitarMetadatos = (
-        "\n¿Quieres añadir algo más? Te escuchamos. El formato es en parejas de característica-valor."
-        "\nPor ejemplo: 'cielo': 'gris' o 'estado de ánimo': 'de bajón'."
-        "\nSi no quieres añadir nada más, pulsa intro"
-    )
+        actividad_usuario = input("\n✍️ ¿Qué te gustaría hacer hoy? (Ejemplo: 'Quiero explorar museos') ")
 
-    solicitarMasMetadatos = (
-        "\n¿Algo más?. Recuerda que el formato es en parejas de característica-valor."
-        "\nPor ejemplo: 'mi perro': 'está animado' o 'bolsillo': 'a tope de dólares'."
-        "\nSi no quieres añadir nada más, pulsa intro"
-    )
+        if actividad_usuario.lower() == "salir":
+            return
 
-    despedida = (
-        "\nGracias por contar conmigo ¡Pásalo muy bien hoy y luego me cuentas!"
-        "\n¡Hasta pronto!"
-    )
+        while True:
+            try:
+                nivel_energia = int(input("\n⚡ ¿Cuál es tu nivel de energía? (1: Bajo, 2: Medio, 3: Alto): "))
+                if nivel_energia in [1, 2, 3]:
+                    break
+                else:
+                    print("❌ Debes ingresar un número entre 1 y 3.")
+            except ValueError:
+                print("❌ Entrada no válida. Ingresa un número entre 1 y 3.")
 
-    def limpiarPantalla(self):
-        """ Limpia la pantalla de la terminal (compatible con Windows y Unix). """
-        os.system('cls' if os.name == 'nt' else 'clear')
+        # Generar JSON con las respuestas del usuario
+        datos_usuario = {
+            "actividad": actividad_usuario,
+            "nivel_energia": nivel_energia
+        }
 
-    def mostrarBienvenida(self):
-        self.limpiarPantalla()  # Limpiar la pantalla antes de mostrar la bienvenida
-        print(self.bienvenida)
+        print("\n📜 Información recopilada en formato JSON:")
+        print(json.dumps(datos_usuario, indent=4))
 
-    def mostrarMenu(self):
-        print(self.menu)
+        time.sleep(2)
 
-    def solicitarInputAlUsuario(self):
-        print(self.solicitarEntradaUsuario)
+    def solicitar_experiencia(self):
+        """Solicita una experiencia viajera y genera un texto basado en la petición del usuario."""
+        print("\n🔹 Has seleccionado 'Solicitar una experiencia viajera' 🏝️✈️")
 
-    def solicitarMasDatosInicial(self):
-        print(self.solicitarMetadatos)
+        peticion_usuario = input("\n✍️ ¿A donde vas? (Ejemplo: '¿Voy a Filipinas una semana?') ")
 
-    def solicitarMasDatosSucesivo(self):
-        print(self.solicitarMasMetadatos)
+        if peticion_usuario.lower() == "salir":
+            return
+
+        # Enviar la petición al modelo GPT para extraer ciudad y actividad
+        prompt_extraccion = (
+            f"Analiza la siguiente petición y extrae la ciudad y la actividad: '{peticion_usuario}'.\n"
+            "Devuelve el resultado en formato JSON con las claves 'ciudad' y 'actividad'."
+        )
+
+        respuesta = self.modelo_gpt.generar_texto(prompt_extraccion)
+
+        # Procesar respuesta del modelo
+        try:
+            datos_extraidos = json.loads(respuesta)
+            ciudad = datos_extraidos.get("ciudad", "desconocida")
+            actividad = datos_extraidos.get("actividad", "desconocida")
+        except json.JSONDecodeError:
+            ciudad = "desconocida"
+            actividad = "desconocida"
+
+        print(f"\n📍 Ciudad detectada: {ciudad}")
+        print(f"🎭 Actividad detectada: {actividad}")
+
+        # Generar respuesta final con el modelo GPT
+        prompt_final = f"Genera una experiencia viajera en {ciudad} para realizar {actividad}."
+        resultado = self.modelo_gpt.generar_texto(prompt_final)
+
+        print("\n📜 Experiencia recomendada:")
+        print(resultado)
+
+        time.sleep(2)
+
+    def ver_base_datos(self):
+        """Método de ejemplo para ver la base de datos."""
+        print("\n🔹 Has seleccionado 'Ver base de datos' 📂📊")
+        time.sleep(1)
+        print("🚧 Función en construcción...")
 
     def mostrarDespedida(self):
-        print(self.despedida)
-
-    def mostrarPlanActividades(self, plan_actividades):
-        print(self.planDeActividades)
-        print(plan_actividades)
+        """Muestra mensaje de despedida."""
+        print("\n👋 ¡Gracias por usar Experiencias Viajeras! Hasta la próxima. 🌍✨")
+        time.sleep(2)
