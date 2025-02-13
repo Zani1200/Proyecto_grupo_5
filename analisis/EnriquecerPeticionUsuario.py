@@ -8,7 +8,7 @@ def obtener_hora_local():
     return datetime.now().isoformat()
 
 def obtener_ubicacion():
-    return {"ciudad": "Aruba", "pais": "Venezuela"}
+    return {"ciudad": "Oranjestad", "pais": "Aruba"}
 
 def obtener_clima():
     return {"temperatura": "15°C", "condición": "Soleado"}
