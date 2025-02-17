@@ -1,4 +1,7 @@
+import json
 import os
+
+from analisis.EnriquecerPeticionUsuario import procesar_peticion
 from modelos.modelo_generativo import ModeloGenerativo
 from modelos.modelo_gpt import ModeloGPT
 from interfaces.Presentacion import Presentacion
@@ -15,8 +18,31 @@ class GeneradorTextos:
         else:
             raise TypeError("El modelo debe ser una instancia de ModeloGenerativo.")
 
-    def generar(self, plantilla, variables):
+    def generar(self, peticionUsuario: json):
         """ Generar texto basado en una plantilla y variables. """
+
+        valores = json.loads(peticionUsuario)
+        variables = {}
+
+        for clave, valor in valores.items():
+            if isinstance(valor, dict):
+                for subClave, subValor in valor.items():
+                    variables[subClave] = subValor
+            else:
+                variables[clave] = valor
+
+        peticion_usuario = valores.get("peticion_usuario")
+        nivel_energia = valores.get("nivel_energia")
+        estado_emocional = valores.get("estado_emocional")
+        ciudad = valores.get("localizacion").get("ciudad")
+        pais = valores.get("localizacion").get("pais")
+        temperatura = valores.get("tiempo").get("temperatura")
+        condicion = valores.get("tiempo").get("condición")
+        hora_local = valores.get("hora_local")
+
+        plantilla = f"{peticion_usuario} con un nivel de energia {nivel_energia}, su estado emocional es {estado_emocional}, el pais es {pais} en la ciudad {ciudad}, " \
+                    f"la temperatura es {temperatura}, su condicion es {condicion} y la hora es {hora_local}"
+
         resultados = {}
 
         for modelo in self.modelos:
@@ -34,7 +60,7 @@ class GeneradorTextos:
 
             except Exception as e:
                 print(f"❌ Error al generar texto con el modelo '{modelo.nombre}': {e}")
-
+        print(resultados)
         return resultados
 
 
@@ -60,56 +86,27 @@ def mostrar_interfaz():
 def main():
     """ Función principal del programa. """
     generador = GeneradorTextos()
+    """
     api_key = os.getenv("OPENAI_API_KEY")  # Obtener la clave de API desde variables de entorno
 
     if not api_key:
         print("❌ ERROR: La API key de OpenAI no está configurada.")
         return
+    """
 
-    modelo_gpt = ModeloGPT("GPT-4", "v1.0", api_key)
+    modelo_gpt = ModeloGPT("GPT-4", "v1.0",
+                           api_key="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")
     generador.agregar_modelo(modelo_gpt)
 
-    while True:
-        print("\n=== Generador de Textos Personalizado ===")
-        plantilla = input("📝 Ingresa una plantilla de prompt (o 'salir' para terminar): ").strip()
+    entrada_json = json.dumps({
+        "peticion_usuario": "Me apetecería darme un buen baño en algún sitio molón.",
+        "nivel_energia": "3"
+    })
 
-        if plantilla.lower() == 'salir':
-            print("👋 Saliendo del programa...")
-            break
+    valoresUsuario = procesar_peticion(entrada_json)
+    generador.generar(valoresUsuario)
 
-        # Validar entrada numérica
-        while True:
-            num_variables_str = input("🔢 ¿Cuántas variables deseas ingresar? ")
-            if num_variables_str.isdigit():  # Verifica si es un número válido
-                num_variables = int(num_variables_str)
-                if num_variables > 0:
-                    break
-                else:
-                    print("⚠️ Debes ingresar al menos una variable.")
-            else:
-                print("❌ Error: Ingresa un número válido.")
-
-        # Capturar variables
-        variables = {}
-        for _ in range(num_variables):
-            clave = input("🔑 Nombre de la variable: ").strip()
-            valor = input(f"📌 Valor para '{clave}': ").strip()
-            variables[clave] = valor
-
-        # Generar textos con la IA
-        try:
-            print("⚙️ Generando texto con los datos proporcionados...")
-            resultados = generador.generar(plantilla, variables)
-
-            if resultados:
-                for nombre, texto in resultados.items():
-                    print(f"\n📜 Modelo: {nombre}\n📝 Texto Generado:\n{texto}\n")
-            else:
-                print("⚠️ No se generaron resultados.")
-
-        except Exception as e:
-            print(f"❌ Error inesperado al generar texto: {e}")
 
 if __name__ == "__main__":
-    mostrar_interfaz()
+    "mostrar_interfaz()"
     main()

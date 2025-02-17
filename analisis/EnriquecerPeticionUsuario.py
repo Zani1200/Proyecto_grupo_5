@@ -1,4 +1,5 @@
 import json
+import os
 from datetime import datetime
 from openai import OpenAI
 
@@ -22,7 +23,7 @@ def obtener_estado_animo():
 def obtener_estado_emocional(texto):
     """Consulta a OpenAI para analizar el estado emocional basado en la petición del usuario."""
 
-    client = OpenAI()
+    client = OpenAI(api_key="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")
 
     respuesta = client.chat.completions.create(
         model="gpt-4",
@@ -35,8 +36,8 @@ def obtener_estado_emocional(texto):
 def procesar_peticion(peticion_json):
     peticion = json.loads(peticion_json)
 
-    peticion_usuario = peticion.get("peticion_usuario", "")
-    nivel_energia = peticion.get("nivel_energia", "2")
+    peticion_usuario = peticion.get("actividad")
+    nivel_energia = peticion.get("nivel_energia")
 
     estado_emocional = obtener_estado_emocional(peticion_usuario)
 
@@ -51,13 +52,3 @@ def procesar_peticion(peticion_json):
     }
 
     return json.dumps(respuesta, indent=4, ensure_ascii=False)
-
-
-# Ejemplo de uso
-entrada_json = json.dumps({
-    "peticion_usuario": "Me apetecería darme un buen baño en algún sitio molón.",
-    "nivel_energia": "3"
-})
-
-salida_json = procesar_peticion(entrada_json)
-print(salida_json)

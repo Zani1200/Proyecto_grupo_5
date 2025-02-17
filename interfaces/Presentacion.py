@@ -1,7 +1,8 @@
 import os
 import time
 import json
-from modelos.modelo_gpt import ModeloGPT
+from analisis.EnriquecerPeticionUsuario import procesar_peticion
+
 
 class Presentacion:
     def __init__(self, modelo_gpt):
@@ -23,7 +24,7 @@ class Presentacion:
         opcion = input("👉 Ingresa el número de la opción que deseas: ")
         return opcion
 
-    def plan_adaptado(self):
+    def plan_adaptado(self, generador):
         """Genera un plan personalizado basado en la actividad y el nivel de energía del usuario."""
         print("\n🔹 Has seleccionado 'Plan adaptado a tu localización' 📍🌎")
 
@@ -35,7 +36,14 @@ class Presentacion:
         while True:
             try:
                 nivel_energia = int(input("\n⚡ ¿Cuál es tu nivel de energía? (1: Bajo, 2: Medio, 3: Alto): "))
+                energia = ""
                 if nivel_energia in [1, 2, 3]:
+                    if nivel_energia == 1:
+                        energia = "bajo"
+                    elif nivel_energia == 2:
+                        energia = "medio"
+                    else:
+                        energia = "alto"
                     break
                 else:
                     print("❌ Debes ingresar un número entre 1 y 3.")
@@ -43,15 +51,18 @@ class Presentacion:
                 print("❌ Entrada no válida. Ingresa un número entre 1 y 3.")
 
         # Generar JSON con las respuestas del usuario
-        datos_usuario = {
+        datos_usuario = json.dumps({
             "actividad": actividad_usuario,
-            "nivel_energia": nivel_energia
-        }
+            "nivel_energia": energia
+        }, indent=4)
 
         print("\n📜 Información recopilada en formato JSON:")
-        print(json.dumps(datos_usuario, indent=4))
+        print(datos_usuario)
 
         time.sleep(2)
+
+        generador.generar(procesar_peticion(datos_usuario))
+
 
     def solicitar_experiencia(self):
         """Solicita una experiencia viajera y genera un texto basado en la petición del usuario."""

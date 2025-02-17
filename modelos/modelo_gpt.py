@@ -1,5 +1,7 @@
 from modelos.modelo_generativo import ModeloGenerativo
 import openai
+import os
+
 
 class ModeloGPT(ModeloGenerativo):
     def __init__(self, nombre, version, api_key):
@@ -12,8 +14,10 @@ class ModeloGPT(ModeloGenerativo):
             # ✅ NUEVO FORMATO para openai.ChatCompletion
             response = openai.chat.completions.create(
                 model="gpt-4",  # Asegura que el modelo sea correcto
-                messages=[{"role": "user", "content": prompt}],  # Formato actualizado
-                max_tokens=150,
+                messages=[
+                    {"role": "system", "content": "eres un experto en crear planes de viajes"},
+                    {"role": "user", "content": prompt}],  # Formato actualizado
+                # max_tokens=150,
                 temperature=0.7,
                 **kwargs  # Permite opciones adicionales
             )
