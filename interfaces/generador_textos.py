@@ -95,7 +95,7 @@ def main():
     """
 
     modelo_gpt = ModeloGPT("GPT-4", "v1.0",
-                           api_key="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")
+                           api_key="OPENAI_API_KEY")
     generador.agregar_modelo(modelo_gpt)
 
     entrada_json = json.dumps({
