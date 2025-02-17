@@ -23,7 +23,8 @@ def obtener_estado_animo():
 def obtener_estado_emocional(texto):
     """Consulta a OpenAI para analizar el estado emocional basado en la petición del usuario."""
 
-    client = OpenAI(api_key="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")
+    # aqui se tendria que poner la api_key tambien
+    client = OpenAI()
 
     respuesta = client.chat.completions.create(
         model="gpt-4",
