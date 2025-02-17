@@ -41,7 +41,6 @@ def procesar_peticion(peticion_json):
 
     estado_emocional = obtener_estado_emocional(peticion_usuario)
 
-
     respuesta = {
         "peticion_usuario": peticion_usuario,
         "nivel_energia": nivel_energia,
