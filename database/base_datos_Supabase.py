@@ -32,9 +32,19 @@ class BaseDatos:
 
         self.client.table("openai_interactions").insert(data).execute()
 
+    def extraer_interacciones_AI(self):
+        interacciones =  response = self.client.table("openai_interactions").select("*").execute()
+
+        return interacciones.data
+
 # Ejemplo de uso
 
+basedatos = BaseDatos()
+
+"""
+# Para probar la inserción
 # Parámetros de prueba
+
 prompt = ("System: Eres un especialista en ocio y actividades culturales. Das respuestas breves y cortas, de unas 50 palabras como máximo"
           "\nUser: ¿Qué te apetece hacer hoy? Descríbemelo como te parezca.\n")
 
@@ -43,5 +53,22 @@ respuesta = ("Visita el Museo del Greco para disfrutar de su arte. Luego, reláj
 model = "gpt-3.5-turbo"
 tokens = 125
 
-basedatos = BaseDatos()
 basedatos.guarda_peticion_AI(prompt, respuesta, model, tokens, None)
+"""
+
+# Para probar la extracción de datos imprimimos toda la información
+
+interacciones = basedatos.extraer_interacciones_AI()
+if not interacciones:
+    print("\nNo hay datos")
+else:
+    for interaccion in interacciones:
+        for interaccion in interacciones:
+            print(f"ID: {interaccion.get('id')}")
+            print(f"Fecha: {interaccion.get('created_at')}")
+            print(f">> Prompt: {interaccion.get('prompt_usuario')}")
+            print(f">> Respuesta: {interaccion.get('respuesta_AI')}")
+            print(f"Modelo: {interaccion.get('model')}")
+            print(f"Tokens: {interaccion.get('tokens_consumidos')}")
+            print(f"Error: {interaccion.get('error')}")
+            print("-" * 40)  # Separador entre registros
