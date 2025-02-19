@@ -16,9 +16,14 @@ class ModeloGPT(ModeloGenerativo):
             response = openai.chat.completions.create(
                 model="gpt-4",  # Asegura que el modelo sea correcto
                 messages=[
-                    {"role": "system", "content": "eres un experto en crear planes de viajes"},
+                    {"role": "system", "content": """1. Eres un experto en crear planes
+                    2. A partir de los datos que te entreguen debes de generar el plan ideal para el usuario
+                    3. la respuesta debe ser concisa teniendo en cuenta todas las variables
+                    4. ten en cuenta todas las actividades que se pueden realizar el día de hoy y decide la más popular
+                    5. que no posea más de 80 palabras
+                    6. piensa paso a paso"""},
                     {"role": "user", "content": prompt}],  # Formato actualizado
-                max_tokens=150,
+                # max_tokens=150,
                 temperature=0.7,
                 **kwargs  # Permite opciones adicionales
             )

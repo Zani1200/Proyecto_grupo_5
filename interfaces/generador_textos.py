@@ -1,6 +1,5 @@
 import json
 import os
-
 from analisis.EnriquecerPeticionUsuario import procesar_peticion
 from modelos.modelo_generativo import ModeloGenerativo
 from modelos.modelo_gpt import ModeloGPT
