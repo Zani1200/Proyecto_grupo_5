@@ -1,6 +1,6 @@
 from modelos.modelo_generativo import ModeloGenerativo
 import openai
-import os
+from database.base_datos_Supabase import BaseDatos
 
 
 class ModeloGPT(ModeloGenerativo):
@@ -8,6 +8,7 @@ class ModeloGPT(ModeloGenerativo):
         super().__init__(nombre, version)
         self.api_key = api_key
         openai.api_key = self.api_key  # Configurar la clave de la API
+        self.baseDatos = BaseDatos()
 
     def generar_texto(self, prompt, **kwargs):
         try:
@@ -17,12 +18,12 @@ class ModeloGPT(ModeloGenerativo):
                 messages=[
                     {"role": "system", "content": "eres un experto en crear planes de viajes"},
                     {"role": "user", "content": prompt}],  # Formato actualizado
-                # max_tokens=150,
+                max_tokens=150,
                 temperature=0.7,
                 **kwargs  # Permite opciones adicionales
             )
-
             # ✅ Extraer el contenido correctamente
+            self.baseDatos.guarda_peticion_AI(prompt, response.choices[0].message.content, response.model, response.usage.total_tokens,None)
             return response.choices[0].message.content
 
         except Exception as e:
