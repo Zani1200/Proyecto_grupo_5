@@ -43,7 +43,7 @@ basedatos = BaseDatos()
 
 """
 # Para probar la inserción
-# Parámetros de prueba
+# Parámetros de prueba (test)
 
 prompt = ("System: Eres un especialista en ocio y actividades culturales. Das respuestas breves y cortas, de unas 50 palabras como máximo"
           "\nUser: ¿Qué te apetece hacer hoy? Descríbemelo como te parezca.\n")
