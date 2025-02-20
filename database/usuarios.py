@@ -1,3 +1,15 @@
+ID_USUARIO = None
+
+
+def get_id_usuario():
+    return ID_USUARIO
+
+
+def set_id_usuario(id):
+    global ID_USUARIO
+    ID_USUARIO = id
+
+
 class Usuario:
 
     def __init__(self, apodo, correo, contraseña):
@@ -12,6 +24,7 @@ class Usuario:
     @apodo.setter
     def apodo(self, nuevo_apodo):
         self._apodo = nuevo_apodo
+
     @property
     def correo(self):
         return self._correo
@@ -19,6 +32,7 @@ class Usuario:
     @correo.setter
     def correo(self, nuevo_correo):
         self._correo = nuevo_correo
+
     @property
     def contraseña(self):
         return self._contraseña

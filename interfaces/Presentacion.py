@@ -2,12 +2,15 @@ import os
 import time
 import json
 from analisis.EnriquecerPeticionUsuario import procesar_peticion
+from database.usuarios import Usuario
 
 
 class Presentacion:
-    def __init__(self, modelo_gpt):
+    def __init__(self, modelo_gpt, usuario: Usuario):
         """Inicializa la clase con un modelo GPT para generar respuestas."""
         self.modelo_gpt = modelo_gpt
+        self.usuario = usuario
+
 
     def mostrar_menu(self):
         os.system("cls" if os.name == "nt" else "clear")  # Limpia la pantalla en Windows/Linux/Mac
@@ -27,7 +30,6 @@ class Presentacion:
     def plan_adaptado(self, generador):
         """Genera un plan personalizado basado en la actividad y el nivel de energía del usuario."""
         print("\n🔹 Has seleccionado 'Plan adaptado a tu localización' 📍🌎")
-
         actividad_usuario = input("\n✍️ ¿Qué te gustaría hacer hoy? (Ejemplo: 'Quiero explorar museos') ")
 
         if actividad_usuario.lower() == "salir":

@@ -3,6 +3,10 @@ import os
 import supabase
 from datetime import datetime
 
+from postgrest import APIError
+
+from database.usuarios import Usuario, set_id_usuario, get_id_usuario
+
 
 class BaseDatos:
     def __init__(self):
@@ -39,42 +43,61 @@ class BaseDatos:
         return interacciones.data
 
     def crear_usuario(self, apodo, correo, contraseña):
+        try:
+            timestamp = datetime.now().isoformat()
 
-        usuario = {
-            "apodo": apodo,
-            "correo": correo,
-            "contraseña": contraseña
-        }
-        self.client.table("usuario").insert(usuario).execute()
+            usuario = {
+                "apodo": apodo,
+                "correo": correo,
+                "contraseña": contraseña,
+                "created_at": timestamp
+            }
+
+            response = self.client.table("usuarios").insert(usuario).execute()
+            set_id_usuario(response.data[0]["id"])
+            return response
+        except APIError:
+            print("Ya existe un usuario con el mismo apodo")
 
     def borrar_usuario(self, id):
-        response = self.client.table("usuario").delete().eq("id", id).execute()
-        print(response)
-        return response.data
+        response = self.client.table("usuarios").delete().eq("id", id).execute()
+        return print(f"{response.data} a sido eliminado con exito")
 
-    def modificar_usuario(self, correo, contraseña):
+    def modificar_usuario(self, id, correo, contraseña):
 
         usuario_modificado = {
             "correo": correo,
             "contraseña": contraseña
         }
 
-        response = self.client.table("usuario").update(usuario_modificado).execute()
-        pass
+        response = self.client.table("usuarios").update(usuario_modificado).eq("id", id).execute()
+        return print(f"{response.data} a sido modificado con exito")
 
     def consultar_usuario(self, id):
-        pass
+        response = self.client.table("usuarios").select().eq("id", id).execute()
+        return print(response.data)
 
-    def listar_usuario(self):
-        response = self.client.table("usuario").select("*").execute()
-        return response.data
+    def listar_usuarios(self):
+        response = self.client.table("usuarios").select("*").execute()
+        if not response:
+            print("No hay usuarios")
+        else:
+            return print(response.data)
 
 
+if __name__ == "__main__":
+    # Ejemplo de uso
 
+    basedatos = BaseDatos()
 
-# Ejemplo de uso
+    usuario = Usuario("example", "example@gmail.com", "example")
 
-basedatos = BaseDatos()
+    basedatos.crear_usuario(usuario.apodo, usuario.correo, usuario.contraseña)
+    basedatos.consultar_usuario(get_id_usuario())
+    basedatos.modificar_usuario(get_id_usuario(), "exampleCambiado@gmail.com", "exampleCambiado")
+    basedatos.listar_usuarios()
+    basedatos.borrar_usuario(get_id_usuario())
+    basedatos.listar_usuarios()
 
 """
 # Para probar la inserción
@@ -89,7 +112,7 @@ model = "gpt-3.5-turbo"
 tokens = 125
 
 basedatos.guarda_peticion_AI(prompt, respuesta, model, tokens, None)
-"""
+
 
 # Para probar la extracción de datos imprimimos toda la información
 
@@ -107,3 +130,5 @@ else:
             print(f"Tokens: {interaccion.get('tokens_consumidos')}")
             print(f"Error: {interaccion.get('error')}")
             print("-" * 40)  # Separador entre registros
+
+"""
