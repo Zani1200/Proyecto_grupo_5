@@ -3,6 +3,7 @@ import os
 import supabase
 from datetime import datetime
 
+
 class BaseDatos:
     def __init__(self):
         SUPABASE_URL = os.getenv("SUPABASE_URL")
@@ -33,9 +34,43 @@ class BaseDatos:
         self.client.table("openai_interactions").insert(data).execute()
 
     def extraer_interacciones_AI(self):
-        interacciones =  response = self.client.table("openai_interactions").select("*").execute()
+        interacciones = response = self.client.table("openai_interactions").select("*").execute()
 
         return interacciones.data
+
+    def crear_usuario(self, apodo, correo, contraseña):
+
+        usuario = {
+            "apodo": apodo,
+            "correo": correo,
+            "contraseña": contraseña
+        }
+        self.client.table("usuario").insert(usuario).execute()
+
+    def borrar_usuario(self, id):
+        response = self.client.table("usuario").delete().eq("id", id).execute()
+        print(response)
+        return response.data
+
+    def modificar_usuario(self, correo, contraseña):
+
+        usuario_modificado = {
+            "correo": correo,
+            "contraseña": contraseña
+        }
+
+        response = self.client.table("usuario").update(usuario_modificado).execute()
+        pass
+
+    def consultar_usuario(self, id):
+        pass
+
+    def listar_usuario(self):
+        response = self.client.table("usuario").select("*").execute()
+        return response.data
+
+
+
 
 # Ejemplo de uso
 

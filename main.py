@@ -3,6 +3,7 @@ import time
 from interfaces.generador_textos import GeneradorTextos
 from interfaces.Presentacion import Presentacion
 from modelos.modelo_gpt import ModeloGPT
+from database.usuarios import Usuario
 
 
 def main():
@@ -12,12 +13,13 @@ def main():
     if not openai_api_key:
         print("❌ Error: No se ha encontrado la API Key de OpenAI en las variables de entorno.")
         return
-
+    # Instancio un usuario de prueba
+    usuario = Usuario("example", "example@gmail.com", "example")
 
     """ Función principal del programa """
     # puse asi la api_key porque no me iba con el "os.getenv("OPENAI_API_KEY")" pero ya se cambiara
 
-    modelo_gpt = ModeloGPT("GPT-4", "v1.0",openai_api_key)
+    modelo_gpt = ModeloGPT("GPT-4", "v1.0", openai_api_key)
 
     # Crear instancia de Presentacion
     presentacion = Presentacion(modelo_gpt)
