@@ -5,7 +5,7 @@ from datetime import datetime
 
 from postgrest import APIError
 
-from database.usuarios import Usuario, set_id_usuario, get_id_usuario
+from .usuarios import Usuario, set_id_usuario, get_id_usuario
 
 
 class BaseDatos:
@@ -61,7 +61,8 @@ class BaseDatos:
 
     def borrar_usuario(self, id):
         response = self.client.table("usuarios").delete().eq("id", id).execute()
-        return print(f"{response.data} a sido eliminado con exito")
+
+        return response
 
     def modificar_usuario(self, id, correo, contraseña):
 
@@ -71,18 +72,19 @@ class BaseDatos:
         }
 
         response = self.client.table("usuarios").update(usuario_modificado).eq("id", id).execute()
-        return print(f"{response.data} a sido modificado con exito")
+        return response
 
     def consultar_usuario(self, id):
         response = self.client.table("usuarios").select().eq("id", id).execute()
-        return print(response.data)
+        return response.data
 
     def listar_usuarios(self):
         response = self.client.table("usuarios").select("*").execute()
-        if not response:
+        if not response.data:
             print("No hay usuarios")
+            return []
         else:
-            return print(response.data)
+            return response.data
 
 
 if __name__ == "__main__":
