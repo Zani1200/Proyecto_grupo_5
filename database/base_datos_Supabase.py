@@ -5,7 +5,7 @@ from datetime import datetime
 
 from postgrest import APIError
 
-from .usuarios import Usuario, set_id_usuario, get_id_usuario
+from database.usuarios import Usuario, set_id_usuario, get_id_usuario
 
 
 class BaseDatos:
@@ -28,7 +28,7 @@ class BaseDatos:
 
         data = {
             "created_at": timestamp,
-            "prompt_usuario": prompt_usuario,
+            "prompt": prompt_usuario,
             "respuesta_AI": respuesta_AI,
             "model": model,
             "tokens_consumidos": tokens,
