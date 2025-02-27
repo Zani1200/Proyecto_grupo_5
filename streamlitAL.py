@@ -5,14 +5,19 @@ from streamlit_option_menu import option_menu
 
 BASE_URL = "http://localhost:8000"  # Cambia esto si FastAPI corre en otro host/puerto
 
-# st.title("Gestión de Usuarios")
+# Manera inicial de crear el título y el menú
+
+# st.title("👤 Gestión de Usuarios")  # Icono en el título
 #
 # menu = st.sidebar.selectbox("Selecciona una opción", [
 #     "Crear Usuario", "Obtener Usuario", "Actualizar Usuario", "Eliminar Usuario", "Listar Usuarios"
 # ])
 
-# st.title("👤 Gestión de Usuarios")  # Icono en el título
 
+
+# Creamos el título usando markdown para controlar el icono que añadimos
+
+# Obtenemos los iconos de https://icons.getbootstrap.com/
 st.markdown(
     """
     <h1>
@@ -36,20 +41,8 @@ with st.sidebar:
         orientation="vertical"  # Asegura que el menú se muestre en la barra lateral
     )
 
-# Diccionario de iconos para los encabezados
-iconos = {
-    "Crear Usuario": "person-add",
-    "Consultar usuario por ID": "person-check",
-    "Actualizar Usuario": "person-gear",
-    "Eliminar Usuario": "person-dash",
-    "Listar Usuarios": "person-lines-fill"
-}
-
-# Función para mostrar encabezados con iconos
-def mostrar_header(titulo):
-    st.markdown(f"<h2><i class='bi bi-{iconos[titulo]}'></i> {titulo}</h2>", unsafe_allow_html=True)
-
 if menu == "Crear Usuario":
+    # Usamos markdown para cabecera con icono extraído de https://icons.getbootstrap.com/
     st.markdown(
         """
         <h2>
@@ -74,6 +67,7 @@ if menu == "Crear Usuario":
         st.write(response.json())
 
 elif menu == "Obtener Usuario":
+    # Usamos markdown para cabecera con icono extraído de https://icons.getbootstrap.com/
     st.markdown(
         """
         <h2>
@@ -91,7 +85,7 @@ elif menu == "Obtener Usuario":
         st.write(response.json())
 
 elif menu == "Actualizar Usuario":
-    #Cabecera con icono extraído de https://icons.getbootstrap.com/icons/person-gear/
+    # Cabecera con icono extraído de https://icons.getbootstrap.com/icons/person-gear/
     st.markdown(
         """
         <h2>
@@ -114,6 +108,7 @@ elif menu == "Actualizar Usuario":
         st.write(response.json())
 
 elif menu == "Eliminar Usuario":
+    # Usamos markdown para cabecera con icono extraído de https://icons.getbootstrap.com/
     st.markdown(
         """
         <h2>
