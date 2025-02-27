@@ -5,7 +5,7 @@ from datetime import datetime
 
 from postgrest import APIError
 
-from database.usuarios import Usuario, set_id_usuario, get_id_usuario
+from .usuarios import Usuario, set_id_usuario, get_id_usuario
 
 
 class BaseDatos:

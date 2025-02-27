@@ -1,8 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel, EmailStr, Field
 from typing import List, Optional
-from database.base_datos_Supabase import BaseDatos
-from database.usuarios import Usuario
+from ..database.base_datos_Supabase import BaseDatos
 
 app = FastAPI()
 
@@ -70,15 +69,6 @@ def update_usuario(id: int, usuario: UsuarioUpdate, db: BaseDatos = Depends(get_
     print("Usuario", usuario)
     if not response:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
-
-    # Actualizar solo los campos enviados
-    # usuarioDB = response[0]
-    # if usuario.apodo:
-    #     usuarioDB.get("apodo") = usuario.apodo
-    # if usuario.email:
-    #     usuarioDB.get("email") = usuario.email
-    # if usuario.password:
-    #     usuarioDB.get("password") = usuario.password
 
     response = db.modificar_usuario(id, usuario.correo, usuario.contraseña)
 
