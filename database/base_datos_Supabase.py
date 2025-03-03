@@ -5,7 +5,7 @@ from datetime import datetime
 
 from postgrest import APIError
 
-from .usuarios import Usuario, set_id_usuario, get_id_usuario
+from database.usuarios import *
 
 
 class BaseDatos:
@@ -86,7 +86,7 @@ class BaseDatos:
         else:
             return response.data
 
-
+"""
 if __name__ == "__main__":
     # Ejemplo de uso
 
@@ -101,7 +101,6 @@ if __name__ == "__main__":
     basedatos.borrar_usuario(get_id_usuario())
     basedatos.listar_usuarios()
 
-"""
 # Para probar la inserción
 # Parámetros de prueba (test)
 
