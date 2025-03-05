@@ -1,6 +1,9 @@
-from modelos.modelo_generativo import ModeloGenerativo
+
 import openai
+
 from database.base_datos_Supabase import BaseDatos
+from modelos.modelo_generativo import ModeloGenerativo
+
 
 class ModeloGPT(ModeloGenerativo):
     def __init__(self, nombre, version, api_key):

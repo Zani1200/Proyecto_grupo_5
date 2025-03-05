@@ -1,5 +1,7 @@
 import json
+
 from modelos.modelo_generativo import ModeloGenerativo
+
 
 class GeneradorTextos:
     def __init__(self):

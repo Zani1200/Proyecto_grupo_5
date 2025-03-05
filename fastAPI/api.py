@@ -1,15 +1,16 @@
 import sys
 from pathlib import Path
 
+from database.base_datos_Supabase import BaseDatos
+
 # Ajustar el sys.path para incluir la ruta al directorio raíz del proyecto
 # Esto permite que Python encuentre el módulo 'database' incluso si ejecutas desde 'fastAPI'
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 
-from database.base_datos_Supabase import BaseDatos
-
 from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel, EmailStr, Field
 from typing import List, Optional
+
 
 app = FastAPI()
 
