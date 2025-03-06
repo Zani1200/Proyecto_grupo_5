@@ -1,9 +1,21 @@
 import streamlit as st
 import requests
 import pandas as pd
+import logging
+
 from streamlit_option_menu import option_menu
 
+# Configuración del logging
+logging.basicConfig(filename="users.log", level=logging.INFO,
+                    format="%(asctime)s - %(levelname)s - %(message)s")
+
 BASE_URL = "http://localhost:8000"  # Cambia esto si FastAPI corre en otro host/puerto
+
+def log_action(action, details=""):
+    """Registra acciones de mantenimiento de usuarios en el log."""
+    logging.info(f"{action} - {details}")
+
+
 
 # Manera inicial de crear el título y el menú
 
@@ -12,7 +24,6 @@ BASE_URL = "http://localhost:8000"  # Cambia esto si FastAPI corre en otro host/
 # menu = st.sidebar.selectbox("Selecciona una opción", [
 #     "Crear Usuario", "Obtener Usuario", "Actualizar Usuario", "Eliminar Usuario", "Listar Usuarios"
 # ])
-
 
 
 # Creamos el título usando markdown para controlar el icono que añadimos
@@ -59,11 +70,13 @@ if menu == "Crear Usuario":
     contraseña = st.text_input("Contraseña", type="password")
 
     if st.button("Crear Usuario"):
+        log_action("Intento de creación de usuario", f"Apodo: {apodo}, Correo: {correo}")
         response = requests.post(f"{BASE_URL}/usuarios/crear/", json={
             "apodo": apodo,
             "correo": correo,
             "contraseña": contraseña
         })
+        log_action("Fin creación usuario", f"Respuesta: {response.json()}")
         st.write(response.json())
 
 elif menu == "Obtener Usuario":
