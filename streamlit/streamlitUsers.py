@@ -1,3 +1,5 @@
+import os
+
 import streamlit as st
 import requests
 import pandas as pd
@@ -9,7 +11,8 @@ from streamlit_option_menu import option_menu
 logging.basicConfig(filename="../users.log", level=logging.INFO,
                     format="%(asctime)s - %(levelname)s - %(message)s")
 
-BASE_URL = "http://localhost:8000"  # Cambia esto si FastAPI corre en otro host/puerto
+# BASE_URL = "http://localhost:8000"  # Cambia esto si FastAPI corre en otro host/puerto
+BASE_URL = os.getenv("FAST_API_URL")
 
 # def log_action(action, details=""):
 #     """Registra acciones de mantenimiento de usuarios en el log."""
