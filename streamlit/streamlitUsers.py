@@ -11,13 +11,13 @@ from streamlit_option_menu import option_menu
 logging.basicConfig(filename="../users.log", level=logging.INFO,
                     format="%(asctime)s - %(levelname)s - %(message)s")
 
-# BASE_URL = "http://localhost:8000"  # Cambia esto si FastAPI corre en otro host/puerto
-BASE_URL = os.getenv("FAST_API_URL")
+# Tomamos la url de la API de una variable de entorno por agilidad al usar contenedores con urls que irán variando.
+# Para que funcione en local, ponemos el valor por defecto
+BASE_URL = os.getenv("FAST_API_URL", "http://localhost:8000")
 
 # def log_action(action, details=""):
 #     """Registra acciones de mantenimiento de usuarios en el log."""
 #     logging.info(f"{action} - {details}")
-
 
 
 # Manera inicial de crear el título y el menú
