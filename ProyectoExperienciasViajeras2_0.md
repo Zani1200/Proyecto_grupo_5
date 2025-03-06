@@ -5,7 +5,7 @@ Version 2. Mejoras sobre la versión 1.
    1.1 Comprobar si existe el usuario - Necesitamos nuevo método en fastAPI -> David
    1.2 Realizar navegación en función del rol - Hecho
 3. Guardar id usuario cuando se meta información en base de datos -> David
-4. Métricas -> Pedro
+4. Métricas -> David
 5. Logs (librería logging) -> Alfredo
 6. Mejorar aspecto visual del interfaz -> Pedro
 
