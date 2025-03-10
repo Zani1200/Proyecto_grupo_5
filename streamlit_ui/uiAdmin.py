@@ -1,8 +1,11 @@
+import datetime
+
+
 import streamlit as st
 import requests
 import pandas as pd
 from streamlit_option_menu import option_menu
-
+import plotly.express as px
 from streamlit_ui.handler import cambiar_pagina
 
 BASE_URL = "http://localhost:8001"  # Cambia esto si FastAPI corre en otro host/puerto
@@ -33,11 +36,10 @@ def uiAdmin():
     )
     # Menú lateral con iconos
     with st.sidebar:
-        print(st.session_state.usuario)
         if isinstance(st.session_state.usuario, dict): #con esto manejo si el usuario es admin o un user
             menu = option_menu(
                 "Menú",  # Título del menú lateral
-                ["Crear Usuario", "Obtener Usuario", "Actualizar Usuario", "Eliminar Usuario", "Listar Usuarios"],  # Opciones
+                ["Crear Usuario", "Obtener Usuario", "Actualizar Usuario", "Eliminar Usuario", "Listar Usuarios", "Metrica"],  # Opciones
                 icons=["person-add", "person-gear", "person-up", "person-dash", "person-lines-fill"],  # Iconos de Bootstrap
                 menu_icon="menu-button-wide",  # Icono del menú principal
                 default_index=0,  # Opción por defecto
@@ -46,7 +48,7 @@ def uiAdmin():
         else:
             menu = option_menu(
                 "Menú",  # Título del menú lateral
-                ["Crear Usuario"],  # Opciones
+                ["Crear Usuario", "Metrica"],  # Opciones, la metrica hay que quitarla de aqui pero esta solo para hacer pruebas
                 icons=["person-add", "person-gear", "person-up", "person-dash", "person-lines-fill"],  # Iconos de Bootstrap
                 menu_icon="menu-button-wide",  # Icono del menú principal
                 default_index=0,  # Opción por defecto
@@ -165,3 +167,57 @@ def uiAdmin():
                 st.json(data)  # Mostrar el error en JSON para depuración
 
             # st.write(response.json()) #Antigua salida del metodo en JSON crudo
+    elif menu == "Metrica":
+        col1,col2 = st.columns(2)
+        with col1:
+            paises = st.session_state.paises = {
+                "España": 5,
+                "Francia": 2,
+                "Colombia": 4,
+                "Inglaterra": 1
+            }
+
+            # Convertir el diccionario en un DataFrame
+            df = pd.DataFrame(list(paises.items()), columns=["País", "Visitas"])
+            # Crear el gráfico de pastel
+            fig = px.pie(df, names="País", values="Visitas", title="Países más visitados")
+
+            # Mostrar en Streamlit
+            st.plotly_chart(fig)
+        with col2:
+            if "metricas" not in st.session_state:
+                st.session_state.preguntas = []
+
+            # Función para agregar nueva métrica diaria
+            def actualizar_metricas():
+                hoy = datetime.date.today()
+                mañana = datetime.date.today() + datetime.timedelta(days=1)
+
+                # Eliminar datos más antiguos de 30 días
+                st.session_state.preguntas = [m for m in st.session_state.preguntas if
+                                    m["fecha"] >= hoy - datetime.timedelta(days=30)]
+
+                # Agregar nueva métrica del día (simulación)
+                nueva_metrica = {
+                    "fecha": hoy,
+                    "preguntas": 5,  # Aquí pondrías un query real a la base de datos
+                }
+                st.session_state.preguntas.append(nueva_metrica)
+                nueva_metrica_mañana = {
+                    "fecha": mañana,
+                    "preguntas": 2,
+                }
+                st.session_state.preguntas.append(nueva_metrica_mañana)
+
+
+            actualizar_metricas() # para que se actualice al entrar
+
+            # Mostrar datos
+            df = pd.DataFrame(st.session_state.preguntas, columns=["fecha", "preguntas"])
+            fig = px.line(df,x="fecha",y="preguntas",title="Preguntas diarias")
+            st.plotly_chart(fig)
+
+            # Botón para actualizar
+            if st.button("Actualizar métricas"):
+                actualizar_metricas()
+
