@@ -1,17 +1,24 @@
-import json
+
 import os
+import sys
+
+import streamlit as st
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 import supabase
 from datetime import datetime
 
 from postgrest import APIError
 
-from .usuarios import Usuario, set_id_usuario, get_id_usuario
+
+from .usuarios import set_id_usuario
 
 
 class BaseDatos:
     def __init__(self):
-        SUPABASE_URL = os.getenv("SUPABASE_URL")
-        SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+        SUPABASE_URL = st.secrets.get("SUPABASE_URL")
+        SUPABASE_KEY = st.secrets.get("SUPABASE_SERVICE_ROLE_KEY")
         self.client = supabase.create_client(SUPABASE_URL, SUPABASE_KEY)
 
     def guarda_peticion_AI(self, prompt_usuario, respuesta_AI, model, tokens, error):
@@ -45,12 +52,13 @@ class BaseDatos:
     def crear_usuario(self, apodo, correo, contraseña):
         try:
             timestamp = datetime.now().isoformat()
-
+            rol = "admin" if apodo.lower() == "admin" else "user"
             usuario = {
                 "apodo": apodo,
                 "correo": correo,
                 "contraseña": contraseña,
-                "created_at": timestamp
+                "created_at": timestamp,
+                "rol": rol
             }
 
             response = self.client.table("usuarios").insert(usuario).execute()
@@ -86,7 +94,7 @@ class BaseDatos:
         else:
             return response.data
 
-
+"""
 if __name__ == "__main__":
     # Ejemplo de uso
 
@@ -101,7 +109,6 @@ if __name__ == "__main__":
     basedatos.borrar_usuario(get_id_usuario())
     basedatos.listar_usuarios()
 
-"""
 # Para probar la inserción
 # Parámetros de prueba (test)
 
