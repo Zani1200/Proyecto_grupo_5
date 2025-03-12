@@ -1,9 +1,0 @@
-/shelf/
-/workspace.xml
-
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-.venv/
