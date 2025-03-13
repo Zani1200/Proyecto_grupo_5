@@ -50,8 +50,12 @@ class GeneradorTextos:
                 f"Ubicación: {ciudad}, {pais}. "
                 f"Clima: {temperatura}, {condicion}. "
                 f"Hora local: {hora_local}. "
-                "Genera un plan conciso (máximo 80 palabras) teniendo en cuenta todas las variables. "
-                "Piensa paso a paso y sugiere la actividad más popular para el día de hoy."
+                "Genera un plan detallado (mínimo 3 actividades) para que el usuario pueda divertirse. "
+                "Incluye lugares específicos y actividades emocionantes. "
+                "Además, incluye las coordenadas geográficas (latitud, longitud) de cada lugar recomendado en el siguiente formato interno: "
+                "[COORDENADAS: latitud, longitud]. "
+                "No muestres las coordenadas en el texto del plan."
+
             )
 
             resultados = ""
