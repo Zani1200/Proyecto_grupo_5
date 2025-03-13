@@ -28,7 +28,7 @@ def obtener_clima(ciudad, pais):
         if response.status_code == 200:
             temperatura = data["main"]["temp"]
             condicion = data["weather"][0]["description"]
-            return {"temperatura": f"{temperatura}°C", "condicion": condicion}
+            return {"temperatura": f"{temperatura}°C", "condición": condicion}
         else:
             print(f"Error al obtener el clima: {data.get('message', 'Error desconocido')}")
             return {"temperatura": "desconocida", "condición": "desconocida"}

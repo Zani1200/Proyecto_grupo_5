@@ -6,7 +6,6 @@ from streamlit_ui.ver_base_datos import mostrar_base_datos
 from streamlit_ui.configuracion import mostrar_configuracion
 
 def uiUser():
-    st.write(st.session_state.usuario)
     # Menú de navegación
     opciones = {
         "Plan Adaptado": mostrar_plan_adaptado,
