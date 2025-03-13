@@ -8,7 +8,7 @@ from streamlit_option_menu import option_menu
 import plotly.express as px
 from streamlit_ui.handler import cambiar_pagina
 
-BASE_URL = "http://localhost:8001"  # Cambia esto si FastAPI corre en otro host/puerto
+BASE_URL = "http://localhost:8000"  # Cambia esto si FastAPI corre en otro host/puerto
 
 # Manera inicial de crear el título y el menú
 
