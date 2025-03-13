@@ -94,6 +94,34 @@ class BaseDatos:
         else:
             return response.data
 
+    def verificar_usuario(self, apodo, correo, contaseña):
+        response = self.client.table("usuarios").select().eq("apodo", apodo).eq("correo", correo).eq("contraseña",contaseña).execute()
+        if not response.data:
+            return False
+        return response.data[0]
+
+    def insertar_pregunta_respuesta(self, variables: dict, respuesta: str, pregunta: str, id_usuario: int):
+        response = self.client.table("variables_comunes").insert(variables).execute()
+
+        id_variables_comunes = response.data[0]["id"]
+
+        data_respuesta = {
+            "respuesta": respuesta,
+            "id_variables_comunes": id_variables_comunes
+        }
+        response_respuesta = self.client.table("respuesta").insert(data_respuesta).execute()
+
+        id_respuesta = response_respuesta.data[0]["id"]
+
+        data_pregunta = {
+            "id_usuario": id_usuario,
+            "pregunta": pregunta,
+            "id_respuesta": id_respuesta,
+            "id_variables_comunes": id_variables_comunes
+        }
+        response_pregunta = self.client.table("pregunta").insert(data_pregunta).execute()
+
+        return {"message": "Pregunta y respuesta guardadas correctamente"}
 """
 if __name__ == "__main__":
     # Ejemplo de uso

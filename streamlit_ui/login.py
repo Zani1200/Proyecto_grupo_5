@@ -14,19 +14,29 @@ def mostrar_login():
 
     st.title("Inicio de Sesión")
     with st.form(key="login_form"):
-        usuario = st.text_input("Usuario")
+        apodo = st.text_input("Apodo")
         correo = st.text_input("Correo")
         contraseña = st.text_input("Contraseña", type="password")
 
         if st.form_submit_button("Iniciar sesión"):
-            if usuario and correo and contraseña:
-                st.session_state.usuario = {"usuario": usuario, "correo": correo}
-                st.success("Inicio de sesión exitoso")
-                if usuario.lower() == "admin":
+            if apodo and correo and contraseña:
+                if apodo.lower() == "admin":
                     cambiar_pagina("uiAdmin")
                 else:
-                    cambiar_pagina("uiUser")
-
+                    try:
+                        response = requests.get(f"{BASE_URL}/usuarios/verificar/", params={
+                            "apodo": apodo,
+                            "correo": correo,
+                            "contraseña": contraseña
+                        })
+                        response.raise_for_status()  # esto salta cuando hay un error
+                        data = response.json()
+                        id_usuario = data["id"]  # obtenemos el id del usuario
+                        st.session_state.usuario = {"id": id_usuario, "apodo": apodo, "correo": correo}
+                        st.success("Inicio de sesión exitoso")
+                        cambiar_pagina("uiUser")
+                    except requests.exceptions.HTTPError:
+                        st.error("Usuario, correo o contraseña incorrectos")
                 st.rerun()
             else:
                 st.error("Por favor, completa todos los campos")

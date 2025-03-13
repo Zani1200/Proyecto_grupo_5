@@ -9,7 +9,7 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel, EmailStr, Field
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 
 app = FastAPI()
@@ -28,6 +28,13 @@ class UsuarioAPI(BaseModel):
 class UsuarioUpdate(BaseModel):
     correo: Optional[EmailStr] = None
     contraseña: Optional[str] = None
+
+
+class PreguntaRespuesta(BaseModel):
+    id_usuario: int
+    pregunta: str
+    respuesta: str
+    variables: Dict
 
 @app.get("/")
 def bienvenidos():
@@ -92,3 +99,25 @@ def delete_usuario(id: int, db: BaseDatos = Depends(get_database)):
 def list_usuarios(db: BaseDatos = Depends(get_database)):
     usuarios = db.listar_usuarios()
     return usuarios
+
+
+@app.get("/usuarios/verificar/", response_model=dict)
+def verificar_usuario(apodo: str, correo: EmailStr, contraseña: str, db: BaseDatos = Depends(get_database)):
+    verificacion = db.verificar_usuario(apodo, correo, contraseña)
+    if not db.verificar_usuario(apodo, correo, contraseña):
+        raise HTTPException(status_code=401, detail="Usuario o contraseña incorrectos")
+    return {"id": verificacion["id"]}
+
+
+@app.post(path="/pregunta_respuesta/insertar", response_model=dict)
+def insertar_pregunta_respuesta(pregunta_respuesta: PreguntaRespuesta, db: BaseDatos = Depends(get_database)):
+    # Desestructuramos los datos del modelo
+    id_usuario = pregunta_respuesta.id_usuario
+    respuesta = pregunta_respuesta.respuesta
+    pregunta = pregunta_respuesta.pregunta
+    variables = pregunta_respuesta.variables
+    success = db.insertar_pregunta_respuesta(variables, respuesta, pregunta, id_usuario)
+    if not success:
+        raise HTTPException(status_code=401, detail="Error al insertar")
+
+    return {"message": "Insertado correctamente"}

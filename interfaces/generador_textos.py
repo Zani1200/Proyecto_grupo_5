@@ -1,6 +1,9 @@
 import json
+import requests
+import streamlit as st
 
 from modelos.modelo_generativo import ModeloGenerativo
+from streamlit_ui.uiAdmin import BASE_URL
 
 
 class GeneradorTextos:
@@ -28,14 +31,14 @@ class GeneradorTextos:
                     variables[clave] = valor
 
             # Extraer variables
-            peticion_usuario = valores.get("peticion_usuario", "")
-            estado_emocional = valores.get("estado_emocional", "")
-            nivel_energia = valores.get("nivel_energia", "")
-            ciudad = valores.get("ubicacion", {}).get("ciudad", "desconocida")
-            pais = valores.get("ubicacion", {}).get("pais", "desconocido")
-            temperatura = valores.get("tiempo", {}).get("temperatura", "desconocida")
-            condicion = valores.get("tiempo", {}).get("condición", "desconocida")
-            hora_local = valores.get("hora_local", "")
+            peticion_usuario = valores.get("peticion_usuario")
+            estado_emocional = valores.get("estado_emocional")
+            nivel_energia = valores.get("nivel_energia")
+            ciudad = valores.get("ubicacion").get("ciudad")
+            pais = valores.get("ubicacion").get("pais")
+            temperatura = valores.get("tiempo").get("temperatura")
+            condicion = valores.get("tiempo").get("condición")
+            hora_local = valores.get("hora_local")
 
             # Construir el prompt
             plantilla = (
@@ -62,6 +65,12 @@ class GeneradorTextos:
                     texto_generado = modelo.generar_texto(prompt)
                     if texto_generado:
                         resultados = texto_generado
+                        response = requests.post(f"{BASE_URL}/pregunta_respuesta/insertar", json={
+                            "id_usuario": st.session_state.usuario["id"],
+                            "pregunta": prompt,
+                            "respuesta": resultados,
+                            "variables": variables
+                        })
                         break  # Usar el primer modelo que genere texto
                     else:
                         print("⚠️ El modelo no generó una respuesta válida.")
