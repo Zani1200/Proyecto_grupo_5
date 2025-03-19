@@ -38,7 +38,7 @@ class PreguntaRespuesta(BaseModel):
 
 @app.get("/")
 def bienvenidos():
-    return {"Hola": "¡Estamos trabajando en ello!"}
+    return {"Bienvenidos": "Backend de gestion de datos de usuarios de Experiencias Viajeras"}
 
 # CREAR Usuario
 @app.post("/usuarios/crear/", response_model=dict)

@@ -14,7 +14,8 @@ def main():
     # Obtener la API Key de OpenAI desde la variable de entorno
 
 
-    openai_api_key = st.secrets.get("OPENAI_API_KEY")
+    # openai_api_key = st.secrets.get("OPENAI_API_KEY")
+    openai_api_key = os.getenv("OPENAI_API_KEY")
     if not openai_api_key:
         print("❌ Error: No se ha encontrado la API Key de OpenAI en las variables de entorno.")
         return

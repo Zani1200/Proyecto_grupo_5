@@ -1,0 +1,10 @@
+streamlit
+pandas
+logging
+streamlit_option_menu
+streamlit_lottie
+plotly
+folium
+openai
+supabase
+streamlit_folium

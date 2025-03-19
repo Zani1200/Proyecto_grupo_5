@@ -1,0 +1,9 @@
+fastAPI
+pydantic
+typing
+supabase
+datetime
+postgrest
+uvicorn
+pydantic[email]
+streamlit

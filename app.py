@@ -13,10 +13,10 @@ if "pagina" not in st.session_state:
 if "usuario" not in st.session_state:
     usuario = st.session_state.usuario = None
 
-# Verificar si la API Key está configurada
-if "OPENAI_API_KEY" not in st.secrets:
-    st.error("❌ No se encontró la API Key de OpenAI en secrets.toml. Por favor, configúrala.")
-    st.stop()
+# Verificar si la API Key está configurada - Quitamos esta condición porque nuestro usuario de Google Cloud no permite usar secretos
+# if "OPENAI_API_KEY" not in st.secrets:
+#     st.error("❌ No se encontró la API Key de OpenAI en secrets.toml. Por favor, configúrala.")
+#     st.stop()
 
 
 if st.session_state.pagina == 'Login':

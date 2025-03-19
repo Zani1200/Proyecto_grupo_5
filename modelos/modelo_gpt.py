@@ -22,7 +22,7 @@ class ModeloGPT(ModeloGenerativo):
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.7,
-                max_tokens=150  # Ajusta según sea necesario
+                max_tokens=900  # Ajusta según sea necesario
             )
             texto_generado = response.choices[0].message.content
             self.baseDatos.guarda_peticion_AI(prompt, texto_generado, response.model, response.usage.total_tokens, None)

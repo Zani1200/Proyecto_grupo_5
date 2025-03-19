@@ -1,3 +1,5 @@
+import os
+
 import streamlit as st
 from modelos.modelo_gpt import ModeloGPT
 from analisis.EnriquecerPeticionUsuario import obtener_ubicacion, obtener_hora_local
@@ -6,7 +8,9 @@ def mostrar_experiencia_viajera():
     st.title("✈️ Solicitar una Experiencia Viajera")
 
     # Obtener la API Key de OpenAI desde secrets.toml
-    openai_api_key = st.secrets["OPENAI_API_KEY"]
+    openai_api_key = os.getenv("OPENAI_API_KEY")
+    # Se comenta para usar en Google Cloud, donde no se pueden usar secrets con nuestro usuario
+    # openai_api_key = st.secrets["OPENAI_API_KEY"]
 
     # Instanciar el modelo GPT
     modelo_gpt = ModeloGPT("GPT-4", "v1.0", openai_api_key)

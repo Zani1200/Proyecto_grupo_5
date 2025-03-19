@@ -1,4 +1,6 @@
 import json
+import os
+
 import requests
 import streamlit as st
 from datetime import datetime
@@ -20,7 +22,7 @@ def obtener_hora_local():
 def obtener_clima(ciudad, pais):
     """Obtiene el clima y la temperatura actual desde OpenWeatherMap."""
     try:
-        api_key = st.secrets["OPENWEATHERMAP_API_KEY"]
+        api_key = os.getenv("OPENWEATHERMAP_API_KEY")
         url = f"http://api.openweathermap.org/data/2.5/weather?q={ciudad},{pais}&appid={api_key}&units=metric"
         response = requests.get(url)
         data = response.json()

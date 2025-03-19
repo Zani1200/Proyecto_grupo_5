@@ -7,6 +7,7 @@ from analisis.EnriquecerPeticionUsuario import procesar_peticion, obtener_ubicac
 import re
 import folium
 from streamlit_folium import folium_static
+import os
 
 def mostrar_animacion_lottie():
     """
@@ -574,7 +575,9 @@ def mostrar_plan_adaptado():
         st.title("Plan Adaptado a Ti")  # Título sin el emoji de ubicación
 
     # Obtener la API Key de OpenAI desde secrets.toml
-    openai_api_key = st.secrets["OPENAI_API_KEY"]
+    openai_api_key = os.getenv("OPENAI_API_KEY")
+    # Se comenta para usar en Google Cloud, donde no se pueden usar secrets con nuestro usuario
+    # openai_api_key = st.secrets["OPENAI_API_KEY"]
 
     # Instanciar el modelo GPT
     modelo_gpt = ModeloGPT("GPT-4", "v1.0", openai_api_key)

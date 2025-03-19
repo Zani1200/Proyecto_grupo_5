@@ -17,8 +17,8 @@ from .usuarios import set_id_usuario
 
 class BaseDatos:
     def __init__(self):
-        SUPABASE_URL = st.secrets.get("SUPABASE_URL")
-        SUPABASE_KEY = st.secrets.get("SUPABASE_SERVICE_ROLE_KEY")
+        SUPABASE_URL = os.getenv("SUPABASE_URL")
+        SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
         self.client = supabase.create_client(SUPABASE_URL, SUPABASE_KEY)
 
     def guarda_peticion_AI(self, prompt_usuario, respuesta_AI, model, tokens, error):
