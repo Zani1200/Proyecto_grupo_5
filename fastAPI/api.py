@@ -131,3 +131,8 @@ def listar_paises(db: BaseDatos = Depends(get_database)):
 def listar_preguntas_hora(db: BaseDatos = Depends(get_database)):
     hora = db.preguntas_diarias()
     return hora
+
+@app.get("interacciones/listar/", response_model=list)
+def listar_interacciones(db: BaseDatos = Depends(get_database)):
+    interacciones = db.extraer_interacciones_AI()
+    return interacciones

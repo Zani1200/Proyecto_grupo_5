@@ -20,26 +20,21 @@ def mostrar_login():
 
         if st.form_submit_button("Iniciar sesión"):
             if apodo and correo and contraseña:
-                if apodo.lower() == "admin":
-                    st.session_state.usuario = {"apodo": apodo, "correo": correo}
+                try:
+                    response = requests.get(f"{BASE_URL}/usuarios/verificar/", params={
+                        "apodo": apodo,
+                        "correo": correo,
+                        "contraseña": contraseña
+                    })
+                    response.raise_for_status()  # esto salta cuando hay un error
+                    data = response.json()
+                    id_usuario = data["id"]  # obtenemos el id del usuario
+                    st.session_state.usuario = {"id": id_usuario, "apodo": apodo, "correo": correo}
+                    st.success("Inicio de sesión exitoso")
                     cambiar_pagina("uiUser")
                     st.rerun()
-                else:
-                    try:
-                        response = requests.get(f"{BASE_URL}/usuarios/verificar/", params={
-                            "apodo": apodo,
-                            "correo": correo,
-                            "contraseña": contraseña
-                        })
-                        response.raise_for_status()  # esto salta cuando hay un error
-                        data = response.json()
-                        id_usuario = data["id"]  # obtenemos el id del usuario
-                        st.session_state.usuario = {"id": id_usuario, "apodo": apodo, "correo": correo}
-                        st.success("Inicio de sesión exitoso")
-                        cambiar_pagina("uiUser")
-                        st.rerun()
-                    except requests.exceptions.HTTPError:
-                        st.error("Usuario, correo o contraseña incorrectos")
+                except requests.exceptions.HTTPError:
+                    st.error("Usuario, correo o contraseña incorrectos")
 
             else:
                 st.error("Por favor, completa todos los campos")
