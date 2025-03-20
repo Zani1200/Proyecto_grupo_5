@@ -4,6 +4,7 @@ import os
 import streamlit as st
 import requests
 import pandas as pd
+from streamlit import sidebar
 from streamlit_option_menu import option_menu
 import plotly.express as px
 from streamlit_ui.handler import cambiar_pagina
@@ -37,8 +38,9 @@ def uiAdmin():
         """,
         unsafe_allow_html=True
     )
+    menuLateral = st.sidebar
     # Menú lateral con iconos
-    with st.sidebar:
+    with menuLateral:
         if isinstance(st.session_state.usuario, dict): #con esto manejo si el usuario es admin o un user
             menu = option_menu(
                 "Menú",  # Título del menú lateral
@@ -51,8 +53,8 @@ def uiAdmin():
         else:
             menu = option_menu(
                 "Menú",  # Título del menú lateral
-                ["Crear Usuario", "Metrica"],  # Opciones, la metrica hay que quitarla de aqui pero esta solo para hacer pruebas
-                icons=["person-add", "person-gear", "person-up", "person-dash", "person-lines-fill"],  # Iconos de Bootstrap
+                ["Crear Usuario"],  # Opciones, la metrica hay que quitarla de aqui pero esta solo para hacer pruebas
+                icons=["person-add"],  # Iconos de Bootstrap
                 menu_icon="menu-button-wide",  # Icono del menú principal
                 default_index=0,  # Opción por defecto
                 orientation="vertical"  # Asegura que el menú se muestre en la barra lateral
@@ -173,12 +175,14 @@ def uiAdmin():
     elif menu == "Metrica":
         col1,col2 = st.columns(2)
         with col1:
-            paises = st.session_state.paises = {
-                "España": 5,
-                "Francia": 2,
-                "Colombia": 4,
-                "Inglaterra": 1
-            }
+            response = requests.get(f"{BASE_URL}/variables_comunes/listar/paises/")
+            data = response.json()
+            paises = {}
+            for pais in data:
+                if pais.get("pais") in paises:
+                    paises[pais.get("pais")] += 1
+                else:
+                    paises[pais.get("pais")] = 1
 
             # Convertir el diccionario en un DataFrame
             df = pd.DataFrame(list(paises.items()), columns=["País", "Visitas"])
@@ -193,34 +197,34 @@ def uiAdmin():
 
             # Función para agregar nueva métrica diaria
             def actualizar_metricas():
-                hoy = datetime.date.today()
-                mañana = datetime.date.today() + datetime.timedelta(days=1)
+                response = requests.get(f"{BASE_URL}/preguntas/listar/hora/")
+                fechas = pd.to_datetime(response.json()).date
 
-                # Eliminar datos más antiguos de 30 días
-                st.session_state.preguntas = [m for m in st.session_state.preguntas if
-                                    m["fecha"] >= hoy - datetime.timedelta(days=30)]
+                # Contar la cantidad de eventos por día
+                conteo_por_dia = pd.DataFrame({'Fecha': fechas})
+                conteo_por_dia = conteo_por_dia['Fecha'].value_counts().reset_index()
+                conteo_por_dia.columns = ['Fecha', 'Número de eventos']
+                conteo_por_dia = conteo_por_dia.sort_values(by='Fecha')
 
-                # Agregar nueva métrica del día (simulación)
-                nueva_metrica = {
-                    "fecha": hoy,
-                    "preguntas": 5,  # Aquí pondrías un query real a la base de datos
-                }
-                st.session_state.preguntas.append(nueva_metrica)
-                nueva_metrica_mañana = {
-                    "fecha": mañana,
-                    "preguntas": 2,
-                }
-                st.session_state.preguntas.append(nueva_metrica_mañana)
+                # Crear gráfico de barras interactivo con Plotly
+                fig = px.bar(
+                    conteo_por_dia,
+                    x="Fecha",
+                    y="Número de eventos",
+                    title="Frecuencia de eventos por día",
+                    labels={"Fecha": "Fecha", "Número de eventos": "Número de Eventos"},
+                    text_auto=True,
+                    color="Número de eventos",
+                    color_continuous_scale="Blues"
+                )
 
+                st.plotly_chart(fig)
 
             actualizar_metricas() # para que se actualice al entrar
-
-            # Mostrar datos
-            df = pd.DataFrame(st.session_state.preguntas, columns=["fecha", "preguntas"])
-            fig = px.line(df,x="fecha",y="preguntas",title="Preguntas diarias")
-            st.plotly_chart(fig)
 
             # Botón para actualizar
             if st.button("Actualizar métricas"):
                 actualizar_metricas()
 
+    if menuLateral.button("Volver a la aplicacion", on_click=cambiar_pagina, args=("uiUser",)):
+        st.rerun()

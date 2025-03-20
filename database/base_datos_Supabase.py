@@ -7,7 +7,7 @@ import streamlit as st
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import supabase
-from datetime import datetime
+from _datetime import datetime
 
 from postgrest import APIError
 
@@ -122,6 +122,18 @@ class BaseDatos:
         response_pregunta = self.client.table("pregunta").insert(data_pregunta).execute()
 
         return {"message": "Pregunta y respuesta guardadas correctamente"}
+
+    def listar_paises(self):
+        response = self.client.table("variables_comunes").select("pais").execute()
+        return response.data
+
+    def preguntas_diarias(self):
+        response = self.client.table("pregunta").select("created_at").execute()
+        tiempo_preguntas = []
+        for tiempo in response.data:
+            tiempo_preguntas.append(tiempo.get("created_at"))
+        return tiempo_preguntas
+
 """
 if __name__ == "__main__":
     # Ejemplo de uso

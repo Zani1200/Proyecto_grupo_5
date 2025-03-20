@@ -21,7 +21,9 @@ def mostrar_login():
         if st.form_submit_button("Iniciar sesión"):
             if apodo and correo and contraseña:
                 if apodo.lower() == "admin":
-                    cambiar_pagina("uiAdmin")
+                    st.session_state.usuario = {"apodo": apodo, "correo": correo}
+                    cambiar_pagina("uiUser")
+                    st.rerun()
                 else:
                     try:
                         response = requests.get(f"{BASE_URL}/usuarios/verificar/", params={
@@ -35,19 +37,13 @@ def mostrar_login():
                         st.session_state.usuario = {"id": id_usuario, "apodo": apodo, "correo": correo}
                         st.success("Inicio de sesión exitoso")
                         cambiar_pagina("uiUser")
+                        st.rerun()
                     except requests.exceptions.HTTPError:
                         st.error("Usuario, correo o contraseña incorrectos")
-                st.rerun()
+
             else:
                 st.error("Por favor, completa todos los campos")
         if st.form_submit_button("Crear cuenta"):
             cambiar_pagina("uiAdmin")
             st.rerun()
 
-"""
-response = requests.get(f"{BASE_URL}/usuarios/listar/")
-                data = response.json()
-                for users in data:
-                    if usuario == users["apodo"]:
-                        st.error("Ya existe un usuario con ese apodo")
-"""

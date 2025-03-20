@@ -121,3 +121,13 @@ def insertar_pregunta_respuesta(pregunta_respuesta: PreguntaRespuesta, db: BaseD
         raise HTTPException(status_code=401, detail="Error al insertar")
 
     return {"message": "Insertado correctamente"}
+
+@app.get("/variables_comunes/listar/paises/", response_model=list)
+def listar_paises(db: BaseDatos = Depends(get_database)):
+    paises = db.listar_paises()
+    return paises
+
+@app.get("/preguntas/listar/hora/", response_model=list)
+def listar_preguntas_hora(db: BaseDatos = Depends(get_database)):
+    hora = db.preguntas_diarias()
+    return hora
