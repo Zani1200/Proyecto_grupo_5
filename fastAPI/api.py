@@ -36,6 +36,8 @@ class PreguntaRespuesta(BaseModel):
     respuesta: str
     variables: Dict
 
+
+
 @app.get("/")
 def bienvenidos():
     return {"Bienvenidos": "Backend de gestion de datos de usuarios de Experiencias Viajeras"}
@@ -132,7 +134,7 @@ def listar_preguntas_hora(db: BaseDatos = Depends(get_database)):
     hora = db.preguntas_diarias()
     return hora
 
-@app.get("interacciones/listar/", response_model=list)
+@app.get("/interaccionesIA/listar/", response_model=list)
 def listar_interacciones(db: BaseDatos = Depends(get_database)):
     interacciones = db.extraer_interacciones_AI()
     return interacciones

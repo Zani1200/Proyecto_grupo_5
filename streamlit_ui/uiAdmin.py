@@ -12,7 +12,7 @@ from streamlit_ui.handler import cambiar_pagina
 BASE_URL = os.getenv("FASTAPI_BACKEND_URL")
 
 if not BASE_URL:
-    BASE_URL ="http://localhost:8000"
+    BASE_URL ="http://localhost:8001"
 
 # Manera inicial de crear el título y el menú
 
@@ -189,7 +189,20 @@ def uiAdmin():
         # Instanciar la base de datos
 
         interacciones = requests.get(f"{BASE_URL}/interaccionesIA/listar/")
-        st.write(interacciones.json())
+        if interacciones:
+            st.write("Listado de interacciones almacenadas:")
+            # st.json(interacciones)
+
+            # Se utiliza expander para mostrar textos largos de forma amigable
+            # Invertir la lista para mostrar los más recientes primero
+            for i, interaccion in enumerate(interacciones.json()[::-1]):
+                with st.expander(f"🆕 Interacción {len(interacciones.json()) - i}"):  # Ajusta el número de la interacción
+                    for clave, valor in interaccion.items():
+                        st.markdown(f"**{clave}:** {valor}")
+                    st.markdown("---")  # Separador visual
+
+        else:
+            st.info("ℹ️ No hay interacciones almacenadas en la base de datos.")
 
     elif menu == "Metrica":
         col1,col2 = st.columns(2)
