@@ -616,13 +616,14 @@ def mostrar_plan_adaptado():
                 resultado = generador.generar(peticion_enriquecida)
 
                 if resultado and not resultado.startswith("❌"):
-                    st.success("✅ Plan generado con éxito:")
+                    st.success("✅ Plan generado con éxito")
 
                     # Eliminar las coordenadas del texto que se muestra al usuario
                     plan_sin_coordenadas = re.sub(r"\s*\[COORDENADAS:.*\]", "", resultado)
 
                     # Mostrar el plan completo usando st.markdown
-                    st.markdown(f"**Plan de viaje:**\n{plan_sin_coordenadas}")
+                    # st.markdown(f"**Tu plan:**\n{plan_sin_coordenadas}")
+                    st.markdown(f"{plan_sin_coordenadas}")
 
                     # Extraer ubicaciones del plan
                     ubicaciones = extraer_ubicaciones(resultado)

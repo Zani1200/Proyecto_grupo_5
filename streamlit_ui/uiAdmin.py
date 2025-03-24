@@ -12,7 +12,7 @@ from streamlit_ui.handler import cambiar_pagina
 BASE_URL = os.getenv("FASTAPI_BACKEND_URL")
 
 if not BASE_URL:
-    BASE_URL ="http://localhost:8001"
+    BASE_URL ="http://localhost:8000"
 
 # Manera inicial de crear el título y el menú
 
@@ -27,24 +27,24 @@ def uiAdmin():
     # Creamos el título usando markdown para controlar el icono que añadimos
 
     # Obtenemos los iconos de https://icons.getbootstrap.com/
-    st.markdown(
-        """
-        <h1>
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
-                <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
-            </svg>
-            Gestión de Usuarios
-        </h1>
-        """,
-        unsafe_allow_html=True
-    )
+    # st.markdown(
+    #     """
+    #     <h1>
+    #         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+    #             <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
+    #         </svg>
+    #         Gestión de Usuarios
+    #     </h1>
+    #     """,
+    #     unsafe_allow_html=True
+    # )
     menuLateral = st.sidebar
     # Menú lateral con iconos
     with menuLateral:
         if isinstance(st.session_state.usuario, dict): #con esto manejo si el usuario es admin o un user
             menu = option_menu(
-                "Menú",  # Título del menú lateral
-                ["Crear Usuario", "Obtener Usuario", "Actualizar Usuario", "Eliminar Usuario", "Listar Usuarios","Listar InteraccionesIA", "Metrica"],  # Opciones
+                "Administración",  # Título del menú lateral
+                ["Crear Usuario", "Obtener Usuario", "Actualizar Usuario", "Eliminar Usuario", "Listar Usuarios","---","Ver Interacciones con IA", "Métricas"],  # Opciones
                 icons=["person-add", "person-gear", "person-up", "person-dash", "person-lines-fill"],  # Iconos de Bootstrap
                 menu_icon="menu-button-wide",  # Icono del menú principal
                 default_index=0,  # Opción por defecto
@@ -52,7 +52,7 @@ def uiAdmin():
             )
         else:
             menu = option_menu(
-                "Menú",  # Título del menú lateral
+                "¡Hola!",  # Título del menú lateral
                 ["Crear Usuario"],  # Opciones, la metrica hay que quitarla de aqui pero esta solo para hacer pruebas
                 icons=["person-add"],  # Iconos de Bootstrap
                 menu_icon="menu-button-wide",  # Icono del menú principal
@@ -160,38 +160,33 @@ def uiAdmin():
             """,
             unsafe_allow_html=True
         )
-        if st.button("Cargar Usuarios"):
-            response = requests.get(f"{BASE_URL}/usuarios/listar/")
-            data = response.json()  # Convertimos la respuesta a JSON
+        response = requests.get(f"{BASE_URL}/usuarios/listar/")
+        data = response.json()  # Convertimos la respuesta a JSON
 
-            if isinstance(data, list):  # Verificamos que la respuesta sea una lista de usuarios
-                df = pd.DataFrame(data)
-                st.dataframe(df)  # Mostrar en una tabla interactiva
-            else:
-                st.error("Error al cargar los usuarios")
-                st.json(data)  # Mostrar el error en JSON para depuración
+        if isinstance(data, list):  # Verificamos que la respuesta sea una lista de usuarios
+            df = pd.DataFrame(data)
+            st.dataframe(df)  # Mostrar en una tabla interactiva
+        else:
+            st.error("Error al cargar los usuarios")
+            st.json(data)  # Mostrar el error en JSON para depuración
 
             # st.write(response.json()) #Antigua salida del metodo en JSON crudo
-    elif menu == "Listar InteraccionesIA":
+    elif menu == "Ver Interacciones con IA":
         st.markdown(
             """
             <h2>
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                     <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
-                </svg> Listado completo de usuarios
+                </svg> Listado de interacciones con la IA
             </h2>
             """,
             unsafe_allow_html=True
         )
 
-        st.title("📂 Consulta de interacciones con la IA")
-
         # Instanciar la base de datos
 
         interacciones = requests.get(f"{BASE_URL}/interaccionesIA/listar/")
         if interacciones:
-            st.write("Listado de interacciones almacenadas:")
-            # st.json(interacciones)
 
             # Se utiliza expander para mostrar textos largos de forma amigable
             # Invertir la lista para mostrar los más recientes primero
@@ -204,7 +199,7 @@ def uiAdmin():
         else:
             st.info("ℹ️ No hay interacciones almacenadas en la base de datos.")
 
-    elif menu == "Metrica":
+    elif menu == "Métricas":
         col1,col2 = st.columns(2)
         with col1:
             response = requests.get(f"{BASE_URL}/variables_comunes/listar/paises/")

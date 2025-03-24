@@ -1,6 +1,5 @@
 fastAPI
 pydantic
-typing
 supabase
 datetime
 postgrest

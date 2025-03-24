@@ -50,7 +50,7 @@ class GeneradorTextos:
                 f"Clima: {temperatura}, {condicion}. "
                 f"Hora local: {hora_local}. "
                 "Genera un plan detallado (mínimo 3 actividades) para que el usuario pueda divertirse. "
-                "Incluye lugares específicos y actividades emocionantes. "
+                "Incluye lugares específicos y actividades acordes al estado del usuario y al dato del clima. Comenta en la respuesta explícitamente por qué propones ese plan desde el punto de vista del clima. "
                 "Además, incluye las coordenadas geográficas (latitud, longitud) de cada lugar recomendado en el siguiente formato interno: "
                 "[COORDENADAS: latitud, longitud]. "
                 "No muestres las coordenadas en el texto del plan."
