@@ -18,7 +18,7 @@ def uiUser():
             "Plan Adaptado": mostrar_plan_adaptado,
             "Experiencia Viajera": mostrar_experiencia_viajera,
             "Ubicación": mostrar_configuracion, # Cambiado de "Configuración" a "Ubicación"
-            "Gestion Usuarios": mostrar_uiAdmin
+            "Consola de Administración": mostrar_uiAdmin
         }
     else:
         opciones = {
